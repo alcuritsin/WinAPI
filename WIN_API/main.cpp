@@ -1,13 +1,14 @@
 ﻿#include<Windows.h>
 #include"resource.h"
 
-CONST CHAR* LIST_CONTENT[] =
+CONST CHAR* CB_CONTENT[] =
 {
 	"This",
 	"is",
 	"my",
 	"first",
-	"ComboBox"
+	"Combo",
+	"Box"
 };
 
 BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -30,11 +31,11 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		HICON hIcon = LoadIcon(GetModuleHandle(0), MAKEINTRESOURCE(IDI_ICON1));
 		SendMessage(hwnd, WM_SETICON, 1, (LPARAM)hIcon);
 
-		HWND hList = GetDlgItem(hwnd, IDC_COMBO1);
+		HWND hCombo = GetDlgItem(hwnd, IDC_COMBO1);
 
-		for (int i = 0; i < sizeof(LIST_CONTENT) / sizeof(LIST_CONTENT[0]); i++)
+		for (int i = 0; i < sizeof(CB_CONTENT) / sizeof(CB_CONTENT[0]); i++)
 		{
-			SendMessage(hList, CB_ADDSTRING, 0, (LPARAM)LIST_CONTENT[i]);
+			SendMessage(hCombo, CB_ADDSTRING, 0, (LPARAM)CB_CONTENT[i]);
 		}
 
 	}
@@ -46,12 +47,13 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case IDOK:
 		{
 			//MessageBox(NULL, "Press butn 'OK'", "Info", MB_ICONINFORMATION | MB_OK);
-			HWND hList = GetDlgItem(hwnd, IDC_COMBO1);
+			HWND hCombo = GetDlgItem(hwnd, IDC_COMBO1);
 
 			CHAR sz_buffer[256] = {};
-			SendMessageA(hList, CB_GETLBTEXT, 0, (LPARAM)sz_buffer);
+			SendMessage(hCombo, CB_GETLBTEXT, SendMessage((HWND)hCombo, (UINT)CB_GETCURSEL,
+				(WPARAM)0, (LPARAM)0), (LPARAM)sz_buffer);
 
-			MessageBox(NULL, sz_buffer, "Вы выбрали: ", MB_ICONINFORMATION | MB_OK);
+			MessageBox(hwnd, sz_buffer, "Вы выбрали: ", MB_ICONINFORMATION | MB_OK);
 		}
 			break;
 		case IDCANCEL: EndDialog(hwnd, 0); break;
